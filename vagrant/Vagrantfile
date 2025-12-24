@@ -1,0 +1,31 @@
+# Application server
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "debian/bullseye64"
+  config.vm.box_version = "11.20241217.1"
+  config.vm.disk :disk, size: "50GB", name: "storage"
+
+  #setting root pw for the vm
+  config.vm.provision "shell", run: "once", inline: <<-SHELL
+    echo "root:Alma1234" | chpasswd
+  SHELL
+
+  #setting up partitions for /opt and /tmp
+  config.vm.provision "shell", run: "once", inline: <<-SHELL
+    apt-get update
+    apt-get install -y lvm2
+    pvcreate /dev/sdb
+    vgcreate vg_data /dev/sdb
+    lvcreate -L 5G -n lv_opt vg_data
+    lvcreate -L 3G -n lv_tmp vg_data
+    mkfs.ext4 /dev/vg_data/lv_opt
+    mkfs.ext4 /dev/vg_data/lv_tmp
+    mount /dev/vg_data/lv_opt /opt
+    mount /dev/vg_data/lv_tmp /tmp
+
+    echo "/dev/vg_data/lv_opt /opt ext4 defaults 0 2" >> /etc/fstab
+    echo "/dev/vg_data/lv_tmp /tmp ext4 defaults,nodev,nosuid,noexec 0 2" >> /etc/fstab
+
+    chmod 1777 /tmp
+  SHELL
+end
