@@ -1,4 +1,8 @@
-# Application server
+##############################
+#                            #
+#     Application server     #
+#                            #
+##############################
 
 Vagrant.configure("2") do |config|
   config.vm.box = "debian/bullseye64"
@@ -35,3 +39,9 @@ Vagrant.configure("2") do |config|
     chmod 1777 /tmp
   SHELL
 end
+
+#########################
+#                       #
+#     Jenkins server    #
+#                       #
+#########################
