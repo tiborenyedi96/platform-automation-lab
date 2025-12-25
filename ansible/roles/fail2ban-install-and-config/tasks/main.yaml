@@ -1,0 +1,42 @@
+- name: Apt cache update
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: fail2ban installation
+  apt:
+    name:
+      - fail2ban
+    state: present
+
+#configuring SSH jail
+- name: Configure fail2ban SSH jail
+  copy:
+    dest: /etc/fail2ban/jail.d/sshd.conf
+    content: |
+      [sshd]
+      enabled = true
+      port = 2233
+      filter = sshd
+      logpath = /var/log/auth.log
+      maxretry = 5
+      bantime = 600
+      findtime = 600
+    mode: '0644'
+  notify: restart fail2ban
+
+#configuring nginx jail
+- name: Configure fail2ban Nginx jail
+  copy:
+    dest: /etc/fail2ban/jail.d/nginx.conf
+    content: |
+      [nginx-http-auth]
+      enabled = true
+      port = 80,443
+      filter = nginx-http-auth
+      logpath = /var/log/nginx/error.log
+      maxretry = 5
+      bantime = 600
+      findtime = 600
+    mode: '0644'
+  notify: restart fail2ban
