@@ -38,3 +38,9 @@
   community.general.ufw:
     state: enabled
     policy: deny
+
+- name: Ensure ufw service is enabled and started
+  service:
+    name: ufw
+    state: started
+    enabled: yes
