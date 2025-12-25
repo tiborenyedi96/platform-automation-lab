@@ -1,0 +1,30 @@
+- name: Add own user
+  ansible.builtin.user:
+    name: tenyedi
+    shell: /bin/bash
+    create_home: yes
+    groups: sudo
+    password: "{{ 'Alma1234' | password_hash('sha512') }}"
+    state: present
+
+- name: Add udemx user
+  ansible.builtin.user:
+    name: udemx
+    shell: /bin/bash
+    create_home: yes
+    home: /opt/udemx
+    groups: sudo
+    password: "{{ 'Alma1234' | password_hash('sha512') }}"
+    state: present
+
+- name: Add SSH key for user tenyedi
+  ansible.builtin.authorized_key:
+    user: tenyedi
+    state: present
+    key: "{{ lookup('file', 'tenyedi_key.pub') }}"
+
+- name: Add SSH key for user udemx
+  ansible.builtin.authorized_key:
+    user: udemx
+    state: present
+    key: "{{ lookup('file', 'udemx_key.pub') }}"
