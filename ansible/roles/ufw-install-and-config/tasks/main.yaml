@@ -1,0 +1,22 @@
+#ufw install
+
+- name: Apt cache update
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Package installation
+  apt:
+    name:
+      - ufw
+    state: present
+
+#ufw config
+- name: Enabling ufw
+  community.general.ufw:
+    state: enabled
+    policy: deny
+
+- name: Set logging
+  community.general.ufw:
+    logging: 'on'
