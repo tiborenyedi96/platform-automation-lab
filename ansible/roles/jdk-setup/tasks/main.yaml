@@ -1,0 +1,39 @@
+- name: Adoptium repo dependencies
+  apt:
+    name:
+      - wget
+      - apt-transport-https
+      - gnupg
+    state: present
+
+- name: Adoptium GPG key
+  apt_key:
+    url: https://packages.adoptium.net/artifactory/api/gpg/key/public
+    state: present
+
+- name: Adoptium repo
+  apt_repository:
+    repo: "deb https://packages.adoptium.net/artifactory/deb bullseye main"
+    state: present
+
+- name: Apt cache update
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Package installation
+  apt:
+    name:
+      - temurin-8-jdk
+      - temurin-11-jdk
+    state: present
+
+- name: java settings
+  alternatives:
+    name: java
+    path: /usr/lib/jvm/temurin-8-jdk-amd64/bin/java
+
+- name: javac settings
+  alternatives:
+    name: javac
+    path: /usr/lib/jvm/temurin-8-jdk-amd64/bin/javac
