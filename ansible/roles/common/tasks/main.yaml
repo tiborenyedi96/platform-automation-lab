@@ -1,0 +1,12 @@
+- name: apt cache update
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: basic package installation
+  apt:
+    name:
+      - sudo
+      - mc
+      - htop
+    state: present
