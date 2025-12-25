@@ -4,3 +4,4 @@
   roles:
     - common
     - user-configuration
+    - ssh-settings
