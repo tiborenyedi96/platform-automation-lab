@@ -9,3 +9,4 @@
     - ssh-settings
     - jdk-setup
     - git-install-and-config
+    - ufw-install-and-config
