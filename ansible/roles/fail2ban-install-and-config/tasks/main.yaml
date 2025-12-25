@@ -25,13 +25,13 @@
     mode: '0644'
   notify: restart fail2ban
 
-#configuring nginx jail
+#configuring nginx jail (configured but disabled since there is no nginx installed on this system)
 - name: Configure fail2ban Nginx jail
   copy:
     dest: /etc/fail2ban/jail.d/nginx.conf
     content: |
       [nginx-http-auth]
-      enabled = true
+      enabled = false
       port = 80,443
       filter = nginx-http-auth
       logpath = /var/log/nginx/error.log
