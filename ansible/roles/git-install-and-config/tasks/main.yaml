@@ -1,0 +1,47 @@
+- name: Apt cache update
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+#install and configure git
+- name: Git installation
+  apt:
+    name:
+      - git
+    state: present
+
+- name: Configure git email address
+  shell: |
+    sudo -u udemx git config --global user.email "udemx@udemx.eu"
+  args:
+    creates: /opt/udemx/.gitconfig
+
+- name: Configure git username
+  shell: |
+    sudo -u udemx git config --global user.name "udemx"
+  args:
+    creates: /opt/udemx/.gitconfig
+
+#ssh settings for git
+- name: Ensure .ssh directory exists for udemx
+  file:
+    path: /opt/udemx/.ssh
+    state: directory
+    owner: udemx
+    group: udemx
+    mode: '0700'
+
+- name: Generate SSH key for udemx
+  shell: |
+    sudo -u udemx ssh-keygen -t rsa -b 4096 -f /opt/udemx/.ssh/id_rsa -N ""
+  args:
+    creates: /opt/udemx/.ssh/id_rsa
+
+- name: Display public key for git setup
+  command: cat /opt/udemx/.ssh/id_rsa.pub
+  register: git_ssh_pubkey
+  changed_when: false
+
+- name: Show git public key
+  debug:
+    msg: "Add this SSH key to GitHub/GitLab: {{ git_ssh_pubkey.stdout }}"
