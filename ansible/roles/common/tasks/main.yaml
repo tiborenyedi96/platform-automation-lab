@@ -1,9 +1,9 @@
-- name: apt cache update
+- name: Apt cache update
   apt:
     update_cache: yes
     cache_valid_time: 3600
 
-- name: basic package installation
+- name: Basic package installation
   apt:
     name:
       - sudo
