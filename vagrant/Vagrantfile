@@ -8,7 +8,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "debian/bullseye64"
   config.vm.box_version = "11.20241217.1"
   config.vm.network "forwarded_port", guest: 2233, host: 2233, id: "ssh_custom"
-  config.vm.disk :disk, size: "50GB", name: "storage"
+  config.vm.disk :disk, size: "20GB", name: "storage"
 
   #setting root pw for the vm
   config.vm.provision "shell", run: "once", inline: <<-SHELL
@@ -29,8 +29,8 @@ Vagrant.configure("2") do |config|
     apt-get install -y lvm2
     pvcreate /dev/sdb
     vgcreate vg_data /dev/sdb
-    lvcreate -L 5G -n lv_opt vg_data
-    lvcreate -L 3G -n lv_tmp vg_data
+    lvcreate -L 10G -n lv_opt vg_data
+    lvcreate -L 10G -n lv_tmp vg_data
     mkfs.ext4 /dev/vg_data/lv_opt
     mkfs.ext4 /dev/vg_data/lv_tmp
     mount /dev/vg_data/lv_opt /opt
