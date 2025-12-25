@@ -8,7 +8,6 @@ Vagrant.configure("2") do |config|
   config.vm.box = "debian/bullseye64"
   config.vm.box_version = "11.20241217.1"
   config.vm.network "forwarded_port", guest: 2233, host: 2233, id: "ssh_custom"
-  config.ssh.guest_port = 2233
   config.vm.disk :disk, size: "50GB", name: "storage"
 
   #setting root pw for the vm
