@@ -1,13 +1,20 @@
 - name: Install helm
-  shell: curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | sh -
+  shell: curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
   args:
     creates: /usr/local/bin/helm
+    executable: /bin/bash
 
 - name: Add nginx ingress helm repo
   shell: helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  changed_when: false
 
 - name: Update helm repos
   shell: helm repo update
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  changed_when: false
 
 - name: Install nginx ingress controller
   shell: |
@@ -17,3 +24,102 @@
       --set controller.service.type=NodePort \
       --set controller.service.nodePorts.http=30080 \
       --set controller.service.nodePorts.https=30443
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+
+- name: Wait for Ingress Controller to be ready
+  shell: |
+    kubectl wait --namespace ingress-nginx \
+      --for=condition=ready pod \
+      --selector=app.kubernetes.io/component=controller \
+      --timeout=300s
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  retries: 3
+  delay: 10
+
+# TLS Certificate Setup
+- name: Create directory for TLS certificates
+  file:
+    path: /opt/tls-certs
+    state: directory
+    mode: '0755'
+
+- name: Generate TLS private key
+  shell: |
+    openssl genrsa -out /opt/tls-certs/tls.key 2048
+  args:
+    creates: /opt/tls-certs/tls.key
+
+- name: Generate self-signed TLS certificate
+  shell: |
+    openssl req -new -x509 \
+      -key /opt/tls-certs/tls.key \
+      -out /opt/tls-certs/tls.crt \
+      -days 365 \
+      -subj "/C=HU/ST=Budapest/L=Budapest/O=UDEMX/OU=DevOps/CN=*.udemx.local"
+  args:
+    creates: /opt/tls-certs/tls.crt
+
+- name: Set TLS certificate permissions
+  file:
+    path: "{{ item }}"
+    mode: '0644'
+  loop:
+    - /opt/tls-certs/tls.crt
+    - /opt/tls-certs/tls.key
+
+- name: Create udemx namespace
+  shell: kubectl create namespace udemx || true
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  changed_when: false
+
+- name: Delete existing TLS secret if exists
+  shell: kubectl delete secret tls-secret -n udemx || true
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  changed_when: false
+
+- name: Create TLS secret in Kubernetes
+  shell: |
+    kubectl create secret tls tls-secret \
+      --cert=/opt/tls-certs/tls.crt \
+      --key=/opt/tls-certs/tls.key \
+      -n udemx
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+
+# Hello UDEMX Application Deployment
+- name: Copy Hello UDEMX manifest to VM
+  template:
+    src: hello-udemx.yaml.j2
+    dest: /tmp/hello-udemx.yaml
+    mode: '0644'
+
+- name: Apply Hello UDEMX deployment
+  shell: kubectl apply -f /tmp/hello-udemx.yaml
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+
+- name: Copy Ingress manifest to VM
+  template:
+    src: ingress.yaml.j2
+    dest: /tmp/ingress.yaml
+    mode: '0644'
+
+- name: Apply Ingress resource
+  shell: kubectl apply -f /tmp/ingress.yaml
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+
+- name: Wait for Hello UDEMX pod to be ready
+  shell: |
+    kubectl wait --namespace udemx \
+      --for=condition=ready pod \
+      --selector=app=hello-udemx \
+      --timeout=120s
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  retries: 3
+  delay: 5
