@@ -11,3 +11,4 @@
     - git-install-and-config
     - ufw-install-and-config
     - fail2ban-install-and-config
+    - k3s-install
