@@ -21,3 +21,26 @@
     name: k3s
     state: started
     enabled: yes
+
+- name: Create .kube directory for udemx user
+  file:
+    path: /opt/udemx/.kube
+    state: directory
+    owner: udemx
+    group: udemx
+    mode: '0755'
+
+- name: Copy kubeconfig for udemx user
+  copy:
+    src: /etc/rancher/k3s/k3s.yaml
+    dest: /opt/udemx/.kube/config
+    owner: udemx
+    group: udemx
+    mode: '0600'
+    remote_src: yes
+
+- name: Set KUBECONFIG in udemx bashrc
+  lineinfile:
+    path: /opt/udemx/.bashrc
+    line: 'export KUBECONFIG=/opt/udemx/.kube/config'
+    create: yes
