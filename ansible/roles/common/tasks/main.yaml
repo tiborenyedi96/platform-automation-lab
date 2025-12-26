@@ -9,4 +9,5 @@
       - sudo
       - mc
       - htop
+      - curl
     state: present
