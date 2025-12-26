@@ -1,0 +1,19 @@
+- name: Install helm
+  shell: curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | sh -
+  args:
+    creates: /usr/local/bin/helm
+
+- name: Add nginx ingress helm repo
+  shell: helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+
+- name: Update helm repos
+  shell: helm repo update
+
+- name: Install nginx ingress controller
+  shell: |
+    helm install ingress-nginx ingress-nginx/ingress-nginx \
+      --namespace ingress-nginx \
+      --create-namespace \
+      --set controller.service.type=NodePort \
+      --set controller.service.nodePorts.http=30080 \
+      --set controller.service.nodePorts.https=30443
