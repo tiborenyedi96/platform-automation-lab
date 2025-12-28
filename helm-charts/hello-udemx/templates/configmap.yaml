@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hello-udemx-html
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: hello-udemx
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>UDEMX</title>
+    </head>
+    <body>
+        <h1>Hello UDEMX!</h1>
+    </body>
+    </html>
