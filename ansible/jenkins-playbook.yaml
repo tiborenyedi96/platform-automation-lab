@@ -1,4 +1,4 @@
-- name: App server configuration
+- name: Jenkins server configuration
   hosts: all
   become: yes
   vars:
