@@ -9,11 +9,11 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - myapp.udemx.local
-    - app.udemx.local
+    - hello.udemx.local
+    - incidents.udemx.local
     secretName: tls-secret
   rules:
-  - host: myapp.udemx.local
+  - host: hello.udemx.local
     http:
       paths:
       - path: /
@@ -23,7 +23,7 @@ spec:
             name: hello-udemx-service
             port:
               number: 80
-  - host: app.udemx.local
+  - host: incidents.udemx.local
     http:
       paths:
       - path: /
