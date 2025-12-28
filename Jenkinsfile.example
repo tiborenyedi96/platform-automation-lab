@@ -33,7 +33,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                    ssh -i /var/lib/jenkins/.ssh/id_rsa udemx@APP_SERVER_IP \
+                    ssh -i /var/lib/jenkins/.ssh/id_rsa -p 2233 udemx@APP_SERVER_IP \
                     "helm upgrade --install incident-logger /helm-charts/incident-logger-chart \
                      --set frontend.image=${DOCKERHUB_USER}/incident-frontend:${IMAGE_TAG} \
                      --set backend.image=${DOCKERHUB_USER}/incident-backend:${IMAGE_TAG}"
