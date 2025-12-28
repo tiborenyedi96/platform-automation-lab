@@ -43,11 +43,28 @@
     delay: 10
     timeout: 300
 
+- name: Ensure .ssh directory exists for jenkins user
+  file:
+    path: /var/lib/jenkins/.ssh
+    state: directory
+    owner: jenkins
+    group: jenkins
+    mode: '0700'
+
 - name: Generate SSH key for jenkins user
-  become_user: jenkins
-  shell: ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa -N ""
+  shell: ssh-keygen -t rsa -b 2048 -f /var/lib/jenkins/.ssh/id_rsa -N ""
   args:
     creates: /var/lib/jenkins/.ssh/id_rsa
+
+- name: Set ownership for jenkins SSH key
+  file:
+    path: "{{ item }}"
+    owner: jenkins
+    group: jenkins
+    mode: '0600'
+  loop:
+    - /var/lib/jenkins/.ssh/id_rsa
+    - /var/lib/jenkins/.ssh/id_rsa.pub
 
 - name: Read jenkins SSH public key
   slurp:
