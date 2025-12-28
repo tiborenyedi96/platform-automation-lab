@@ -92,10 +92,9 @@
 
 # Hello UDEMX Application Deployment via Helm
 - name: Copy Hello UDEMX Helm chart to VM
-  synchronize:
-    src: "{{ playbook_dir }}/../helm-charts/hello-udemx"
-    dest: /tmp/
-    delete: yes
+  copy:
+    src: "{{ playbook_dir }}/../helm-charts/hello-udemx/"
+    dest: /tmp/hello-udemx/
 
 - name: Deploy Hello UDEMX using Helm
   shell: |
