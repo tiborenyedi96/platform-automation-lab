@@ -34,7 +34,7 @@
 - name: Start and enable Jenkins service
   systemd:
     name: jenkins
-    state: started
+    state: restarted
     enabled: yes
 
 - name: Wait for Jenkins to start up
