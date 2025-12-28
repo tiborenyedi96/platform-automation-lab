@@ -1,0 +1,11 @@
+- name: App server configuration
+  hosts: all
+  become: yes
+  vars:
+    ansible_become_flags: '-i'
+  roles:
+    - common
+    - user-configuration
+    - ssh-settings
+    - git-install-and-config
+    - ufw-install-and-config
