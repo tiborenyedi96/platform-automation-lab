@@ -8,6 +8,12 @@ Automated DevOps infrastructure with Vagrant, Ansible, K3s, and Jenkins.
 - Vagrant
 - DockerHub account
 
+## Default Credentials
+
+- VM users: `udemx`
+- VM sudo password: `Alma1234`
+- VM root password: `Alma1234`
+
 ## Setup
 
 ### 1. Start VMs
@@ -22,7 +28,14 @@ vagrant up
 Wait for VMs to finish provisioning (~10-15 min).
 
 Access Jenkins at http://localhost:8080
-- Get initial password from Ansible output
+
+Get initial password:
+```bash
+ssh -i ssh-keys/udemx_key -p 2234 udemx@localhost
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+exit
+```
+
 - Install suggested plugins
 - Create admin user
 - Add DockerHub credentials (ID: `dockerhub-credentials`)
@@ -33,7 +46,7 @@ Get Jenkins public key from Ansible output during provisioning.
 
 Add to app server:
 ```bash
-ssh -i vagrant/ssh-keys/udemx_key -p 2233 udemx@localhost
+ssh -i ssh-keys/udemx_key -p 2233 udemx@localhost
 echo '<jenkins-public-key>' >> ~/.ssh/authorized_keys
 exit
 ```
@@ -41,7 +54,7 @@ exit
 ### 4. Create DockerHub secret
 
 ```bash
-ssh -i vagrant/ssh-keys/udemx_key -p 2233 udemx@localhost
+ssh -i ssh-keys/udemx_key -p 2233 udemx@localhost
 kubectl create secret docker-registry dockerhub-secret \
   --docker-server=https://index.docker.io/v1/ \
   --docker-username=YOUR_USERNAME \
