@@ -41,7 +41,7 @@
   wait_for:
     port: 8080
     delay: 10
-    timeout: 120
+    timeout: 300
 
 - name: Generate SSH key for jenkins user
   become_user: jenkins
