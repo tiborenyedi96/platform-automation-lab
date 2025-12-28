@@ -9,3 +9,5 @@
     - ssh-settings
     - git-install-and-config
     - ufw-install-and-config
+    - docker-installation
+    - jenkins-installation
