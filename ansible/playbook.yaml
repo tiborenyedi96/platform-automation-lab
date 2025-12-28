@@ -13,3 +13,4 @@
     - fail2ban-install-and-config
     - k3s-install
     - helm-and-ingress-install
+    - scripting-tasks
