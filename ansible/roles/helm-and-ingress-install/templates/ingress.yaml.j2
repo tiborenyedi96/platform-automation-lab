@@ -22,3 +22,10 @@ spec:
             name: hello-udemx-service
             port:
               number: 80
+      - path: /app
+        pathType: Prefix
+        backend:
+          service:
+            name: incident-logger-frontend
+            port:
+              number: 3000
