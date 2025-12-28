@@ -1,0 +1,75 @@
+- name: Apt cache update
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Install Java 11 for Jenkins
+  apt:
+    name: openjdk-11-jdk
+    state: present
+
+- name: Add GPG key
+  apt_key:
+    url: https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+    state: present
+
+- name: Add Jenkins repository
+  apt_repository:
+    repo: "deb https://pkg.jenkins.io/debian-stable binary/"
+    state: present
+    filename: jenkins
+
+- name: Install Jenkins
+  apt:
+    name: jenkins
+    state: present
+    update_cache: yes
+
+- name: Add jenkins user to docker group
+  user:
+    name: jenkins
+    groups: docker
+    append: yes
+
+- name: Start and enable Jenkins service
+  systemd:
+    name: jenkins
+    state: started
+    enabled: yes
+
+- name: Wait for Jenkins to start up
+  wait_for:
+    port: 8080
+    delay: 10
+    timeout: 120
+
+- name: Generate SSH key for jenkins user
+  become_user: jenkins
+  shell: ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa -N ""
+  args:
+    creates: /var/lib/jenkins/.ssh/id_rsa
+
+- name: Read jenkins SSH public key
+  slurp:
+    src: /var/lib/jenkins/.ssh/id_rsa.pub
+  register: jenkins_ssh_pubkey
+
+- name: Display important Jenkins information
+  debug:
+    msg:
+      - "=========================================="
+      - "Jenkins installed and running!"
+      - "=========================================="
+      - "Web UI: http://<jenkins-server-ip>:8080"
+      - ""
+      - "Get initial admin password:"
+      - "  sudo cat /var/lib/jenkins/secrets/initialAdminPassword"
+      - ""
+      - "Jenkins SSH Public Key (add to app server udemx user):"
+      - "{{ jenkins_ssh_pubkey.content | b64decode }}"
+      - ""
+      - "Run on app server (as udemx user):"
+      - "  mkdir -p ~/.ssh"
+      - "  echo '{{ jenkins_ssh_pubkey.content | b64decode }}' >> ~/.ssh/authorized_keys"
+      - "  chmod 600 ~/.ssh/authorized_keys"
+      - "=========================================="
