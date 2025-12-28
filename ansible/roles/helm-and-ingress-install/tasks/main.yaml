@@ -93,8 +93,9 @@
 # Hello UDEMX Application Deployment via Helm
 - name: Copy Hello UDEMX Helm chart to VM
   copy:
-    src: "{{ playbook_dir }}/../helm-charts/hello-udemx/"
+    src: /helm-charts/hello-udemx/
     dest: /tmp/hello-udemx/
+    remote_src: yes
 
 - name: Deploy Hello UDEMX using Helm
   shell: |
