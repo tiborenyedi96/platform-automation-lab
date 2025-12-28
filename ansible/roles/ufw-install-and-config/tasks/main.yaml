@@ -33,7 +33,13 @@
     rule: allow
     port: '2233'
     proto: tcp
-  
+
+- name: Allow Jenkins traffic
+  community.general.ufw:
+    rule: allow
+    port: '8080'
+    proto: tcp
+
 - name: Allow traffic for K3s apiserver
   community.general.ufw:
     rule: allow
