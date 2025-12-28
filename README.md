@@ -17,15 +17,11 @@ cd vagrant
 vagrant up
 ```
 
-### 2. Get app server IP
+### 2. Configure Jenkins
 
-```bash
-vagrant ssh app-server -c "hostname -I | awk '{print \$2}'"
-```
+Wait for VMs to finish provisioning (~10-15 min).
 
-### 3. Configure Jenkins
-
-Get initial password:
+Get initial password from Ansible output or:
 ```bash
 vagrant ssh jenkins-server -c "sudo cat /var/lib/jenkins/secrets/initialAdminPassword"
 ```
@@ -35,26 +31,24 @@ Access Jenkins at http://localhost:8080
 - Create admin user
 - Add DockerHub credentials (ID: `dockerhub-credentials`)
 
-### 4. Setup SSH key
+### 3. Setup SSH key
 
-Get Jenkins public key from Ansible output or:
+Get Jenkins public key:
 ```bash
 vagrant ssh jenkins-server -c "sudo cat /var/lib/jenkins/.ssh/id_rsa.pub"
 ```
 
 Add to app server:
 ```bash
-vagrant ssh app-server
-mkdir -p ~/.ssh
+ssh -i vagrant/ssh-keys/udemx_key -p 2233 udemx@localhost
 echo '<jenkins-public-key>' >> ~/.ssh/authorized_keys
-chmod 600 ~/.ssh/authorized_keys
 exit
 ```
 
-### 5. Create DockerHub secret
+### 4. Create DockerHub secret
 
 ```bash
-vagrant ssh app-server
+ssh -i vagrant/ssh-keys/udemx_key -p 2233 udemx@localhost
 kubectl create secret docker-registry dockerhub-secret \
   --docker-server=https://index.docker.io/v1/ \
   --docker-username=YOUR_USERNAME \
@@ -63,7 +57,7 @@ kubectl create secret docker-registry dockerhub-secret \
 exit
 ```
 
-### 6. Update hosts file
+### 5. Update hosts file
 
 Add to hosts file:
 
@@ -72,21 +66,21 @@ Add to hosts file:
 127.0.0.1    incidents.udemx.local
 ```
 
-### 7. Setup application repo
+### 6. Setup application repo
 
 In your incident-logger repository:
 - Copy `Jenkinsfile.example` as `Jenkinsfile`
 - Update `DOCKERHUB_USER` and `APP_SERVER_IP`
 - Commit and push
 
-### 8. Create Jenkins pipeline
+### 7. Create Jenkins pipeline
 
 - New Item → Pipeline
 - Pipeline from SCM → Git
 - Add repo URL and credentials
 - Build Now
 
-### 9. Access apps
+### 8. Access apps
 
 - Hello UDEMX: https://hello.udemx.local
 - Incident Logger: https://incidents.udemx.local
