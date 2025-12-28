@@ -1,0 +1,6 @@
+apiVersion: v2
+name: hello-udemx
+description: A simple Hello UDEMX web application
+type: application
+version: 1.0.0
+appVersion: "1.0"
