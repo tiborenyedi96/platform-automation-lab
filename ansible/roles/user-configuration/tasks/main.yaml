@@ -1,3 +1,34 @@
+- name: Create ssh-keys directory on host
+  file:
+    path: /vagrant/ssh-keys
+    state: directory
+    mode: '0700'
+  delegate_to: localhost
+  become: no
+  run_once: true
+
+- name: Generate SSH key for tenyedi
+  openssh_keypair:
+    path: /vagrant/ssh-keys/tenyedi_key
+    type: rsa
+    size: 4096
+    state: present
+    force: no
+  delegate_to: localhost
+  become: no
+  run_once: true
+
+- name: Generate SSH key for udemx
+  openssh_keypair:
+    path: /vagrant/ssh-keys/udemx_key
+    type: rsa
+    size: 4096
+    state: present
+    force: no
+  delegate_to: localhost
+  become: no
+  run_once: true
+
 - name: Add own user
   ansible.builtin.user:
     name: tenyedi
@@ -21,10 +52,10 @@
   ansible.builtin.authorized_key:
     user: tenyedi
     state: present
-    key: "{{ lookup('file', 'tenyedi_key.pub') }}"
+    key: "{{ lookup('file', '/vagrant/ssh-keys/tenyedi_key.pub') }}"
 
 - name: Add SSH key for user udemx
   ansible.builtin.authorized_key:
     user: udemx
     state: present
-    key: "{{ lookup('file', 'udemx_key.pub') }}"
+    key: "{{ lookup('file', '/vagrant/ssh-keys/udemx_key.pub') }}"
