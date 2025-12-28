@@ -1,0 +1,112 @@
+# Scripting tasks role - Deploy monitoring and backup scripts
+
+- name: Create scripts directory
+  file:
+    path: /opt/scripts
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Create backups directory
+  file:
+    path: /opt/scripts/backups
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Create output directory
+  file:
+    path: /opt/scripts/output
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Copy db-backup script
+  copy:
+    src: db-backup.sh
+    dest: /opt/scripts/db-backup.sh
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Copy last-three-mod script
+  copy:
+    src: last-three-mod.sh
+    dest: /opt/scripts/last-three-mod.sh
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Copy last-five-day-mod-files script
+  copy:
+    src: last-five-day-mod-files.sh
+    dest: /opt/scripts/last-five-day-mod-files.sh
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Copy loadavg script
+  copy:
+    src: loadavg.sh
+    dest: /opt/scripts/loadavg.sh
+    mode: '0755'
+    owner: root
+    group: root
+
+# Cron jobs
+
+- name: Setup cron job for db-backup (daily at 2 AM)
+  cron:
+    name: "MySQL database backup"
+    minute: "0"
+    hour: "2"
+    job: "/opt/scripts/db-backup.sh >> /var/log/db-backup.log 2>&1"
+    user: root
+    state: present
+
+- name: Setup cron job for loadavg (every 15 minutes)
+  cron:
+    name: "System load average monitoring"
+    minute: "*/15"
+    job: "/opt/scripts/loadavg.sh"
+    user: root
+    state: present
+
+# Run scripts once to generate initial output files
+# Note: db-backup is NOT run here as MySQL pod may not exist yet
+# It will run automatically via cron at 2 AM daily
+
+- name: Run last-three-mod script to generate initial output
+  shell: /opt/scripts/last-three-mod.sh
+  changed_when: false
+
+- name: Run last-five-day-mod-files script to generate initial output
+  shell: /opt/scripts/last-five-day-mod-files.sh
+  changed_when: false
+
+- name: Run loadavg script to generate initial output
+  shell: /opt/scripts/loadavg.sh
+  changed_when: false
+
+- name: Display scripts information
+  debug:
+    msg:
+      - "=========================================="
+      - "Monitoring scripts deployed successfully!"
+      - "=========================================="
+      - "Scripts location: /opt/scripts/"
+      - ""
+      - "Available scripts:"
+      - "  - db-backup.sh (runs daily at 2 AM)"
+      - "  - last-three-mod.sh"
+      - "  - last-five-day-mod-files.sh"
+      - "  - loadavg.sh (runs every 15 minutes)"
+      - ""
+      - "Output files:"
+      - "  - Backups: /opt/scripts/backups/"
+      - "  - Script outputs: /opt/scripts/output/"
+      - "  - Load avg logs: /var/log/loadavg-*.out"
+      - "=========================================="
