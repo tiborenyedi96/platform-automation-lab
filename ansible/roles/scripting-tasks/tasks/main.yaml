@@ -24,33 +24,73 @@
     owner: root
     group: root
 
-- name: Copy db-backup script
+- name: Create db-backup script
   copy:
-    src: db-backup.sh
+    content: |
+      #!/bin/bash
+
+      DATE=$(date +%Y-%m-%d)
+      BACKUP_DIR="/opt/scripts/backups/${DATE}"
+
+      mkdir -p "${BACKUP_DIR}"
+
+      MYSQL_POD=$(kubectl get pods -n udemx -l app=incident-logger-mysql -o jsonpath='{.items[0].metadata.name}' 2>/dev/null)
+
+      if [ -z "$MYSQL_POD" ]; then
+          echo "ERROR: MySQL pod not found" >&2
+          exit 1
+      fi
+
+      kubectl exec -n udemx ${MYSQL_POD} -- mysqldump -u root -prootpassword udemx_db > "${BACKUP_DIR}/backup.sql" 2>/dev/null
+
+      gzip "${BACKUP_DIR}/backup.sql"
     dest: /opt/scripts/db-backup.sh
     mode: '0755'
     owner: root
     group: root
 
-- name: Copy last-three-mod script
+- name: Create last-three-mod script
   copy:
-    src: last-three-mod.sh
+    content: |
+      #!/bin/bash
+
+      DATE=$(date +%Y-%m-%d)
+      OUTPUT_FILE="/opt/scripts/output/last-three-mod-files-${DATE}.out"
+
+      mkdir -p /opt/scripts/output
+
+      ls -lt /var/log | grep "^-" | head -3 > "${OUTPUT_FILE}"
     dest: /opt/scripts/last-three-mod.sh
     mode: '0755'
     owner: root
     group: root
 
-- name: Copy last-five-day-mod-files script
+- name: Create last-five-day-mod-files script
   copy:
-    src: last-five-day-mod-files.sh
+    content: |
+      #!/bin/bash
+
+      DATE=$(date +%Y-%m-%d)
+      OUTPUT_FILE="/opt/scripts/output/last-five-day-mod-files-${DATE}.out"
+
+      mkdir -p /opt/scripts/output
+
+      find /var/log -type f -mtime -5 > "${OUTPUT_FILE}"
     dest: /opt/scripts/last-five-day-mod-files.sh
     mode: '0755'
     owner: root
     group: root
 
-- name: Copy loadavg script
+- name: Create loadavg script
   copy:
-    src: loadavg.sh
+    content: |
+      #!/bin/bash
+
+      DATE=$(date +%Y-%m-%d)
+      TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
+      LOAD=$(cat /proc/loadavg | awk '{print $1, $2, $3}')
+
+      echo "${TIMESTAMP} | Load: ${LOAD}" >> /var/log/loadavg-${DATE}.out
     dest: /opt/scripts/loadavg.sh
     mode: '0755'
     owner: root
@@ -76,7 +116,7 @@
     state: present
 
 # Run scripts once to generate initial output files
-# Note: db-backup is NOT run here as MySQL pod may not exist yet
+# Note: db-backup will nmot run here as MySQL pod may not exist yet
 # It will run automatically via cron at 2 AM daily
 
 - name: Run last-three-mod script to generate initial output
