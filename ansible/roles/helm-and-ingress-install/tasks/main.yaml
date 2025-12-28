@@ -90,15 +90,19 @@
   environment:
     KUBECONFIG: /etc/rancher/k3s/k3s.yaml
 
-# Hello UDEMX Application Deployment
-- name: Copy Hello UDEMX manifest to VM
-  template:
-    src: hello-udemx.yaml.j2
-    dest: /tmp/hello-udemx.yaml
-    mode: '0644'
+# Hello UDEMX Application Deployment via Helm
+- name: Copy Hello UDEMX Helm chart to VM
+  synchronize:
+    src: "{{ playbook_dir }}/../helm-charts/hello-udemx"
+    dest: /tmp/
+    delete: yes
 
-- name: Apply Hello UDEMX deployment
-  shell: kubectl apply -f /tmp/hello-udemx.yaml
+- name: Deploy Hello UDEMX using Helm
+  shell: |
+    helm upgrade --install hello-udemx /tmp/hello-udemx \
+      --namespace udemx \
+      --create-namespace \
+      --wait
   environment:
     KUBECONFIG: /etc/rancher/k3s/k3s.yaml
 
