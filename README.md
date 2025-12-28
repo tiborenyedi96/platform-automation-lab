@@ -21,22 +21,15 @@ vagrant up
 
 Wait for VMs to finish provisioning (~10-15 min).
 
-Get initial password from Ansible output or:
-```bash
-vagrant ssh jenkins-server -c "sudo cat /var/lib/jenkins/secrets/initialAdminPassword"
-```
-
 Access Jenkins at http://localhost:8080
+- Get initial password from Ansible output
 - Install suggested plugins
 - Create admin user
 - Add DockerHub credentials (ID: `dockerhub-credentials`)
 
 ### 3. Setup SSH key
 
-Get Jenkins public key:
-```bash
-vagrant ssh jenkins-server -c "sudo cat /var/lib/jenkins/.ssh/id_rsa.pub"
-```
+Get Jenkins public key from Ansible output during provisioning.
 
 Add to app server:
 ```bash
