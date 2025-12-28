@@ -39,6 +39,7 @@ exit
 - Install suggested plugins
 - Create admin user
 - Add DockerHub credentials (ID: `dockerhub-credentials`)
+- Add GitHub credentials (ID: `github-credentials`)
 
 ### 3. Setup SSH key
 
