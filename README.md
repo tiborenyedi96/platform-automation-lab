@@ -1,39 +1,127 @@
 # platform-automation-lab
 
-# 1. Start VMs
-cd vagrant && vagrant up
+Automated DevOps infrastructure with Vagrant, Ansible, K3s, and Jenkins.
 
-# 2. Get Jenkins password
+## Prerequisites
+
+- VirtualBox
+- Vagrant
+- DockerHub account
+
+## Setup
+
+### 1. Start VMs
+
+```bash
+cd vagrant
+vagrant up
+```
+
+### 2. Get app server IP
+
+```bash
+vagrant ssh app-server -c "hostname -I | awk '{print \$2}'"
+```
+
+### 3. Configure Jenkins
+
+Get initial password:
+```bash
 vagrant ssh jenkins-server -c "sudo cat /var/lib/jenkins/secrets/initialAdminPassword"
+```
 
-# 3. Open Jenkins: http://localhost:8080
-# - Install suggested plugins
-# - Create admin user
+Access Jenkins at http://localhost:8080
+- Install suggested plugins
+- Create admin user
+- Add DockerHub credentials (ID: `dockerhub-credentials`)
 
-# 4. Add DockerHub credentials in Jenkins
-# Manage Jenkins → Credentials → Add:
-# - ID: dockerhub-credentials
-# - Username/Password: Your DockerHub account
+### 4. Setup SSH key
 
-# 5. Create DockerHub secret on app server
+Get Jenkins public key from Ansible output or:
+```bash
+vagrant ssh jenkins-server -c "sudo cat /var/lib/jenkins/.ssh/id_rsa.pub"
+```
+
+Add to app server:
+```bash
+vagrant ssh app-server
+mkdir -p ~/.ssh
+echo '<jenkins-public-key>' >> ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+exit
+```
+
+### 5. Create DockerHub secret
+
+```bash
 vagrant ssh app-server
 kubectl create secret docker-registry dockerhub-secret \
   --docker-server=https://index.docker.io/v1/ \
   --docker-username=YOUR_USERNAME \
-  --docker-password=YOUR_TOKEN \
+  --docker-password=YOUR_PASSWORD \
   -n udemx
 exit
+```
 
-# 6. Add to your hosts file
-127.0.0.1    myapp.udemx.local
-127.0.0.1    app.udemx.local
+### 6. Update hosts file
 
-# 7. Create Jenkins pipeline job
-## - New Item → Pipeline
-## - Pipeline from SCM → Git
-## - Repo URL, credentials, branch
-## - Save → Build Now
+Add to hosts file:
 
-# 8. Access apps
-## https://hello.udemx.local
-## https://incidents.udemx.local
+```
+127.0.0.1    hello.udemx.local
+127.0.0.1    incidents.udemx.local
+```
+
+### 7. Setup application repo
+
+In your incident-logger repository:
+- Copy `Jenkinsfile.example` as `Jenkinsfile`
+- Update `DOCKERHUB_USER` and `APP_SERVER_IP`
+- Commit and push
+
+### 8. Create Jenkins pipeline
+
+- New Item → Pipeline
+- Pipeline from SCM → Git
+- Add repo URL and credentials
+- Build Now
+
+### 9. Access apps
+
+- Hello UDEMX: https://hello.udemx.local
+- Incident Logger: https://incidents.udemx.local
+
+## What's included
+
+- Debian 11 with SSH on port 2233
+- K3s cluster with Helm
+- Nginx Ingress with TLS
+- UFW firewall and fail2ban
+- OpenJDK 8 & 11
+- Jenkins CI/CD
+- Monitoring scripts in `/opt/scripts/`:
+  - `db-backup.sh` (cron: daily 2 AM)
+  - `last-three-mod.sh`
+  - `last-five-day-mod-files.sh`
+  - `loadavg.sh` (cron: every 15 min)
+
+## Troubleshooting
+
+Check pods:
+```bash
+vagrant ssh app-server
+kubectl get all -n udemx
+```
+
+Test Jenkins SSH:
+```bash
+vagrant ssh jenkins-server
+sudo su - jenkins
+ssh -i ~/.ssh/id_rsa -p 2233 udemx@<app-server-ip>
+```
+
+Check scripts:
+```bash
+ls /opt/scripts/output/
+ls /var/log/loadavg-*.out
+```
