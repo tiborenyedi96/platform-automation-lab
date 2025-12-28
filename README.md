@@ -90,17 +90,3 @@ In your incident-logger repository:
 
 - Hello UDEMX: https://hello.udemx.local
 - Incident Logger: https://incidents.udemx.local
-
-## What's included
-
-- Debian 11 with SSH on port 2233
-- K3s cluster with Helm
-- Nginx Ingress with TLS
-- UFW firewall and fail2ban
-- OpenJDK 8 & 11
-- Jenkins CI/CD
-- Monitoring scripts in `/opt/scripts/`:
-  - `db-backup.sh` (cron: daily 2 AM)
-  - `last-three-mod.sh`
-  - `last-five-day-mod-files.sh`
-  - `loadavg.sh` (cron: every 15 min)
