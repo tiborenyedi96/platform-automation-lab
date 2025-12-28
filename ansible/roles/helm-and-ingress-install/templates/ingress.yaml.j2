@@ -10,6 +10,7 @@ spec:
   tls:
   - hosts:
     - myapp.udemx.local
+    - app.udemx.local
     secretName: tls-secret
   rules:
   - host: myapp.udemx.local
@@ -22,7 +23,10 @@ spec:
             name: hello-udemx-service
             port:
               number: 80
-      - path: /app
+  - host: app.udemx.local
+    http:
+      paths:
+      - path: /
         pathType: Prefix
         backend:
           service:
