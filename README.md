@@ -107,49 +107,47 @@ In the private incident logger repository:
 
 ## Screenshots
 
-### Automated Monitoring and Backup Scripts
-
-The infrastructure includes several monitoring and backup scripts that run automatically via cron jobs:
+### Monitoring and Backup Scripts
 
 ![Cron Jobs](docs/screenshots/cron-jobs.png)
-*Automated cron jobs for MySQL backups (daily at 2 AM) and load average monitoring (every 15 minutes)*
+*Cron jobs: MySQL backup runs daily at 2 AM, load monitoring every 15 minutes*
 
 ![Load Average Monitoring](docs/screenshots/loadavg-output.png)
-*Load average monitoring script output showing system metrics captured every 15 minutes*
+*Load average monitoring output (runs every 15 minutes)*
 
-![Last Three Modified Files](docs/screenshots/last-three-mod.png)
-*Script tracking the three most recently modified files in /var/log*
+![Last Three Modified](docs/screenshots/last-three-mod.png)
+*Last 3 modified files in /var/log*
 
-![Files Modified in Last 5 Days](docs/screenshots/last-five-days.png)
-*Comprehensive listing of all files modified in the last 5 days*
+![Last 5 Days Modified](docs/screenshots/last-five-days.png)
+*All files modified in the last 5 days*
 
 ![MySQL Backup](docs/screenshots/mysql-backup.png)
-*Successful MySQL database backup with working dump validation*
+*MySQL backup script with dump validation*
 
 ### CI/CD Pipeline
 
 ![Jenkins Credentials](docs/screenshots/jenkins-credentials.png)
-*Jenkins configured with DockerHub and GitHub credentials for automated deployments*
+*Jenkins credentials for DockerHub and GitHub*
 
-![Jenkins Pipeline Success](docs/screenshots/jenkins-pipeline-success.png)
-*Successful CI/CD pipeline execution showing all stages: Build, Push to DockerHub, Copy Helm Chart, and Deploy*
+![Pipeline Success](docs/screenshots/jenkins-pipeline-success.png)
+*Successful pipeline: Build → Push → Copy Helm Chart → Deploy*
 
-![Jenkins Pipeline Configuration](docs/screenshots/jenkins-pipeline-config.png)
-*Jenkins pipeline configured with private GitHub repository and SCM integration*
+![Pipeline Config](docs/screenshots/jenkins-pipeline-config.png)
+*Jenkins pipeline configuration with GitHub SCM*
 
-![Docker Hub Images](docs/screenshots/dockerhub-images.png)
-*Automated Docker image builds pushed to Docker Hub registry*
+![DockerHub](docs/screenshots/dockerhub-images.png)
+*Docker images pushed to registry*
 
-### Deployed Applications
+### Running Applications
 
-![Kubernetes Resources](docs/screenshots/kubectl-get-all.png)
-*All Kubernetes resources running successfully - pods, services, deployments, and Helm releases*
+![K8s Resources](docs/screenshots/kubectl-get-all.png)
+*All Kubernetes resources (pods, services, deployments, Helm releases)*
 
-![Hello UDEMX Application](docs/screenshots/hello-udemx.png)
-*Simple Hello UDEMX application deployed via Ansible and accessible through Ingress*
+![Hello UDEMX](docs/screenshots/hello-udemx.png)
+*Hello UDEMX app*
 
-![Incident Logger - View Incidents](docs/screenshots/incident-logger-list.png)
-*Incident Logger application showing ticket management system with severity levels and status tracking*
+![Incidents List](docs/screenshots/incident-logger-list.png)
+*Incident logger - view tickets*
 
-![Incident Logger - Submit Incident](docs/screenshots/incident-logger-submit.png)
-*Incident submission form for creating new tickets with title, description, and severity selection*
+![Submit Incident](docs/screenshots/incident-logger-submit.png)
+*Incident logger - submit new ticket*
