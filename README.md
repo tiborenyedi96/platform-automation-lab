@@ -10,7 +10,7 @@ Automated DevOps infrastructure with Vagrant, Ansible, K3s, and Jenkins.
 
 ## Default Credentials
 
-- VM users: `udemx`
+- VM user: `udemx`
 - VM sudo password: `Alma1234`
 - VM root password: `Alma1234`
 
