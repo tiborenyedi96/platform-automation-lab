@@ -110,44 +110,57 @@ In the private incident logger repository:
 ### Monitoring and Backup Scripts
 
 ![Cron Jobs](docs/screenshots/cron-jobs.png)
+
 *Cron jobs: MySQL backup runs daily at 2 AM, load monitoring every 15 minutes*
 
 ![Load Average Monitoring](docs/screenshots/loadavg-output.png)
+
 *Load average monitoring output (runs every 15 minutes)*
 
 ![Last Three Modified](docs/screenshots/last-three-mod.png)
+
 *Last 3 modified files in /var/log*
 
 ![Last 5 Days Modified](docs/screenshots/last-five-days.png)
+
 *All files modified in the last 5 days*
 
 ![MySQL Backup](docs/screenshots/mysql-backup.png)
+
 *MySQL backup script with dump validation*
 
 ### CI/CD Pipeline
 
 ![Jenkins Credentials](docs/screenshots/jenkins-credentials.png)
+
 *Jenkins credentials for DockerHub and GitHub*
 
 ![Pipeline Success](docs/screenshots/jenkins-pipeline-success.png)
+
 *Successful pipeline: Build → Push → Copy Helm Chart → Deploy*
 
 ![Pipeline Config](docs/screenshots/jenkins-pipeline-config.png)
+
 *Jenkins pipeline configuration with GitHub SCM*
 
 ![DockerHub](docs/screenshots/dockerhub-images.png)
+
 *Docker images pushed to registry*
 
 ### Running Applications
 
 ![K8s Resources](docs/screenshots/kubectl-get-all.png)
+
 *All Kubernetes resources (pods, services, deployments, Helm releases)*
 
 ![Hello UDEMX](docs/screenshots/hello-udemx.png)
+
 *Hello UDEMX app*
 
 ![Incidents List](docs/screenshots/incident-logger-list.png)
+
 *Incident logger - view tickets*
 
 ![Submit Incident](docs/screenshots/incident-logger-submit.png)
+
 *Incident logger - submit new ticket*
