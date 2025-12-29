@@ -1,4 +1,4 @@
-# platform-automation-lab
+# Platform Automation Lab
 
 This is an automated DevOps infrastructure with Vagrant, Ansible, K3s, and Jenkins. I made this as a take-home assignment and to learn about Ansible, Jenkins and K3s.
 
