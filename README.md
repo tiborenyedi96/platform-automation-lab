@@ -7,6 +7,8 @@ This application uses a private repository for the main application components a
 
 To fully use this repository you would need the contents of my private application repository. It contains the completed Jenkinsfile, the frontend and backend code with dockerfiles, and the helm chart which can be deployed to the application server.
 
+Also this application and the infrastructure is just a demo. It has secrets baked in at some places. In production, proper secrets management solutions (ansible vault, etc...) are a must-have.
+
 ## Prerequisites
 
 - VirtualBox
