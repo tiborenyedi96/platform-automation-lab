@@ -31,7 +31,7 @@ Access Jenkins at http://localhost:8080
 
 Get initial password:
 ```bash
-ssh -i ssh-keys/udemx_key -p 2234 udemx@localhost
+ssh -i ssh-keys/udemx_jenkins-server -p 2234 udemx@localhost
 sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 exit
 ```
@@ -45,14 +45,14 @@ exit
 
 Get Jenkins public key:
 ```bash
-ssh -i ssh-keys/udemx_key -p 2234 udemx@localhost
+ssh -i ssh-keys/udemx_jenkins-server -p 2234 udemx@localhost
 sudo cat /var/lib/jenkins/.ssh/id_rsa.pub
 exit
 ```
 
 Add to app server:
 ```bash
-ssh -i ssh-keys/udemx_key -p 2233 udemx@localhost
+ssh -i ssh-keys/udemx_app-server -p 2233 udemx@localhost
 echo '<jenkins-public-key>' >> ~/.ssh/authorized_keys
 exit
 ```
@@ -60,7 +60,7 @@ exit
 ### 4. Create DockerHub secret
 
 ```bash
-ssh -i ssh-keys/udemx_key -p 2233 udemx@localhost
+ssh -i ssh-keys/udemx_app-server -p 2233 udemx@localhost
 kubectl create secret docker-registry dockerhub-secret \
   --docker-server=https://index.docker.io/v1/ \
   --docker-username=YOUR_USERNAME \
