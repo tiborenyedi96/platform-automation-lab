@@ -8,23 +8,25 @@
   run_once: true
 
 - name: Generate SSH key for tenyedi
-  openssh_keypair:
+  community.crypto.openssh_keypair:
     path: /vagrant/ssh-keys/tenyedi_key
     type: rsa
     size: 4096
     state: present
     force: no
+    comment: "tenyedi@platform-automation-lab"
   delegate_to: localhost
   become: no
   run_once: true
 
 - name: Generate SSH key for udemx
-  openssh_keypair:
+  community.crypto.openssh_keypair:
     path: /vagrant/ssh-keys/udemx_key
     type: rsa
     size: 4096
     state: present
     force: no
+    comment: "udemx@platform-automation-lab"
   delegate_to: localhost
   become: no
   run_once: true
