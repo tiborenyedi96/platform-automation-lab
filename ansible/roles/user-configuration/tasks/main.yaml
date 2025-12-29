@@ -13,7 +13,7 @@
     type: rsa
     size: 4096
     state: present
-    force: yes
+    force: no
   delegate_to: localhost
   become: no
   run_once: true
@@ -24,7 +24,7 @@
     type: rsa
     size: 4096
     state: present
-    force: yes
+    force: no
   delegate_to: localhost
   become: no
   run_once: true
@@ -48,14 +48,30 @@
     password: "{{ 'Alma1234' | password_hash('sha512') }}"
     state: present
 
+- name: Read tenyedi SSH public key
+  ansible.builtin.slurp:
+    src: /vagrant/ssh-keys/tenyedi_key.pub
+  register: tenyedi_pubkey
+  delegate_to: localhost
+  become: no
+  run_once: true
+
+- name: Read udemx SSH public key
+  ansible.builtin.slurp:
+    src: /vagrant/ssh-keys/udemx_key.pub
+  register: udemx_pubkey
+  delegate_to: localhost
+  become: no
+  run_once: true
+
 - name: Add SSH key for user tenyedi
   ansible.builtin.authorized_key:
     user: tenyedi
     state: present
-    key: "{{ lookup('file', '/vagrant/ssh-keys/tenyedi_key.pub') }}"
+    key: "{{ tenyedi_pubkey.content | b64decode }}"
 
 - name: Add SSH key for user udemx
   ansible.builtin.authorized_key:
     user: udemx
     state: present
-    key: "{{ lookup('file', '/vagrant/ssh-keys/udemx_key.pub') }}"
+    key: "{{ udemx_pubkey.content | b64decode }}"
