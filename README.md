@@ -2,12 +2,12 @@
 
 This is an automated DevOps infrastructure with Vagrant, Ansible, K3s, and Jenkins. I made this as a take-home assignment and to learn about Ansible, Jenkins and K3s.
 
-## Note
+## Notes
 This application uses a private repository for the main application components and helm charts to show how separation of concerns can be implemented with the tools I used. This public repository only contains the infrastructure built with Vagrant and Ansible and a basic application helm chart which is automatically deployed and shows a simple Hello UDEMX message on the main page.
 
 To fully use this repository you would need the contents of my private application repository. It contains the completed Jenkinsfile, the frontend and backend code with dockerfiles, and the helm chart which can be deployed to the application server.
 
-Also this application and the infrastructure is just a demo. It has secrets baked in at some places. In production, proper secrets management solutions (ansible vault, etc...) are a must-have.
+This application and the infrastructure is just a demo. In production, proper secrets management solutions (ansible vault, etc...) are a must-have. I would also use a better, highly available and scalable database solution in production like Amazon RDS or a similar one from another cloud service providers. I would also implement a multi node, highly available on-prem Kubernetes cluster with redundant power supplies and network connection or a managed kubernetes service like Amazon EKS or similar. Fully serverless solutions are also possible and I have a solution for that in my [serverless repository](https://github.com/tiborenyedi96/incident-logger-serverless)
 
 ## Prerequisites
 
