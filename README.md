@@ -57,14 +57,14 @@ echo '<jenkins-public-key>' >> ~/.ssh/authorized_keys
 exit
 ```
 
-### 4. Create DockerHub secret
+### 4. Create DockerHub secret on application server
 
 ```bash
 ssh -i ssh-keys/udemx_app-server -p 2233 udemx@localhost
 kubectl create secret docker-registry dockerhub-secret \
   --docker-server=https://index.docker.io/v1/ \
   --docker-username=YOUR_USERNAME \
-  --docker-password=YOUR_PASSWORD \
+  --docker-password=YOUR_DOCKER_ACCESS_TOKEN \
   -n udemx
 exit
 ```
