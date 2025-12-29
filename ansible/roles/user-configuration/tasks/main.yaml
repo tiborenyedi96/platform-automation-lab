@@ -13,7 +13,7 @@
     type: rsa
     size: 4096
     state: present
-    force: no
+    force: yes
   delegate_to: localhost
   become: no
   run_once: true
@@ -24,7 +24,7 @@
     type: rsa
     size: 4096
     state: present
-    force: no
+    force: yes
   delegate_to: localhost
   become: no
   run_once: true
