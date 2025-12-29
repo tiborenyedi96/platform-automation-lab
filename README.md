@@ -1,12 +1,18 @@
 # platform-automation-lab
 
-Automated DevOps infrastructure with Vagrant, Ansible, K3s, and Jenkins.
+This is an automated DevOps infrastructure with Vagrant, Ansible, K3s, and Jenkins. I made this as a take-home assignment and to learn about Ansible, Jenkins and K3s.
+
+## Note
+This application uses a private repository for the main application components and helm charts to show how separation of concerns can be implemented with the tools I used. This public repository only contains the infrastructure built with Vagrant and Ansible and a basic application helm chart which is automatically deployed and shows a simple Hello UDEMX message on the main page.
+
+To fully use this repository you would need the contents of my private application repository. It contains the completed Jenkinsfile, the frontend and backend code with dockerfiles, and the helm chart which can be deployed to the application server.
 
 ## Prerequisites
 
 - VirtualBox
 - Vagrant
 - DockerHub account
+- Access to the private repository
 
 ## Default Credentials
 
@@ -80,7 +86,7 @@ Add to hosts file:
 
 ### 6. Setup application repo
 
-In your incident-logger repository:
+In the private incident logger repository:
 - Copy `Jenkinsfile.example` as `Jenkinsfile`
 - Update `DOCKERHUB_USER` and `APP_SERVER_IP`
 - Commit and push
