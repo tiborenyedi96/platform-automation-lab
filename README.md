@@ -102,3 +102,54 @@ In the private incident logger repository:
 
 - Hello UDEMX: https://hello.udemx.local
 - Incident Logger: https://incidents.udemx.local
+
+---
+
+## Screenshots
+
+### Automated Monitoring and Backup Scripts
+
+The infrastructure includes several monitoring and backup scripts that run automatically via cron jobs:
+
+![Cron Jobs](docs/screenshots/cron-jobs.png)
+*Automated cron jobs for MySQL backups (daily at 2 AM) and load average monitoring (every 15 minutes)*
+
+![Load Average Monitoring](docs/screenshots/loadavg-output.png)
+*Load average monitoring script output showing system metrics captured every 15 minutes*
+
+![Last Three Modified Files](docs/screenshots/last-three-mod.png)
+*Script tracking the three most recently modified files in /var/log*
+
+![Files Modified in Last 5 Days](docs/screenshots/last-five-days.png)
+*Comprehensive listing of all files modified in the last 5 days*
+
+![MySQL Backup](docs/screenshots/mysql-backup.png)
+*Successful MySQL database backup with working dump validation*
+
+### CI/CD Pipeline
+
+![Jenkins Credentials](docs/screenshots/jenkins-credentials.png)
+*Jenkins configured with DockerHub and GitHub credentials for automated deployments*
+
+![Jenkins Pipeline Success](docs/screenshots/jenkins-pipeline-success.png)
+*Successful CI/CD pipeline execution showing all stages: Build, Push to DockerHub, Copy Helm Chart, and Deploy*
+
+![Jenkins Pipeline Configuration](docs/screenshots/jenkins-pipeline-config.png)
+*Jenkins pipeline configured with private GitHub repository and SCM integration*
+
+![Docker Hub Images](docs/screenshots/dockerhub-images.png)
+*Automated Docker image builds pushed to Docker Hub registry*
+
+### Deployed Applications
+
+![Kubernetes Resources](docs/screenshots/kubectl-get-all.png)
+*All Kubernetes resources running successfully - pods, services, deployments, and Helm releases*
+
+![Hello UDEMX Application](docs/screenshots/hello-udemx.png)
+*Simple Hello UDEMX application deployed via Ansible and accessible through Ingress*
+
+![Incident Logger - View Incidents](docs/screenshots/incident-logger-list.png)
+*Incident Logger application showing ticket management system with severity levels and status tracking*
+
+![Incident Logger - Submit Incident](docs/screenshots/incident-logger-submit.png)
+*Incident submission form for creating new tickets with title, description, and severity selection*
