@@ -43,7 +43,12 @@ exit
 
 ### 3. Setup SSH key
 
-Get Jenkins public key from Ansible output during provisioning.
+Get Jenkins public key:
+```bash
+ssh -i ssh-keys/udemx_key -p 2234 udemx@localhost
+sudo cat /var/lib/jenkins/.ssh/id_rsa.pub
+exit
+```
 
 Add to app server:
 ```bash
