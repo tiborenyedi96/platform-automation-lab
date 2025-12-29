@@ -9,27 +9,25 @@
 
 - name: Generate SSH key for tenyedi
   community.crypto.openssh_keypair:
-    path: /vagrant/ssh-keys/tenyedi_key
+    path: "/vagrant/ssh-keys/tenyedi_{{ inventory_hostname }}"
     type: rsa
     size: 4096
     state: present
-    force: no
-    comment: "tenyedi@platform-automation-lab"
+    regenerate: full_idempotence
+    comment: "tenyedi@{{ inventory_hostname }}"
   delegate_to: localhost
   become: no
-  run_once: true
 
 - name: Generate SSH key for udemx
   community.crypto.openssh_keypair:
-    path: /vagrant/ssh-keys/udemx_key
+    path: "/vagrant/ssh-keys/udemx_{{ inventory_hostname }}"
     type: rsa
     size: 4096
     state: present
-    force: no
-    comment: "udemx@platform-automation-lab"
+    regenerate: full_idempotence
+    comment: "udemx@{{ inventory_hostname }}"
   delegate_to: localhost
   become: no
-  run_once: true
 
 - name: Add own user
   ansible.builtin.user:
@@ -52,19 +50,17 @@
 
 - name: Read tenyedi SSH public key
   ansible.builtin.slurp:
-    src: /vagrant/ssh-keys/tenyedi_key.pub
+    src: "/vagrant/ssh-keys/tenyedi_{{ inventory_hostname }}.pub"
   register: tenyedi_pubkey
   delegate_to: localhost
   become: no
-  run_once: true
 
 - name: Read udemx SSH public key
   ansible.builtin.slurp:
-    src: /vagrant/ssh-keys/udemx_key.pub
+    src: "/vagrant/ssh-keys/udemx_{{ inventory_hostname }}.pub"
   register: udemx_pubkey
   delegate_to: localhost
   become: no
-  run_once: true
 
 - name: Add SSH key for user tenyedi
   ansible.builtin.authorized_key:
