@@ -129,7 +129,7 @@ In the private incident logger repository:
 
 ![MySQL Backup](docs/screenshots/mysql-backup.png)
 
-*MySQL backup script with dump validation*
+*MySQL backup script*
 
 ### CI/CD Pipeline
 
