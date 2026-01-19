@@ -98,7 +98,7 @@
 
 # Cron jobs
 
-- name: Setup cron job for db-backup (daily at 2 AM)
+- name: Setup cron job for db-backup
   cron:
     name: "MySQL database backup"
     minute: "0"
@@ -107,17 +107,13 @@
     user: root
     state: present
 
-- name: Setup cron job for loadavg (every 15 minutes)
+- name: Setup cron job for loadavg
   cron:
     name: "System load average monitoring"
     minute: "*/15"
     job: "/opt/scripts/loadavg.sh"
     user: root
     state: present
-
-# Run scripts once to generate initial output files
-# Note: db-backup will nmot run here as MySQL pod may not exist yet
-# It will run automatically via cron at 2 AM daily
 
 - name: Run last-three-mod script to generate initial output
   shell: /opt/scripts/last-three-mod.sh
